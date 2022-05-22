@@ -1,0 +1,36 @@
+<div>
+    <button class="btn" onclick='window.location="/"'>HOME</button>
+    <h3 id="warehouseID">{{{result._id}}}</h3>
+    <h2 id="heading">
+        Update Warehouse {{{result.name}}}
+    </h2>
+    <h2 id="success">
+        Changes Saved
+    </h2>
+    <form action="POST" id="updateForm">
+        <div>
+        <label for="nameIP">Name</label>
+        <input type="text" name="nameIP" id="nameIP" placeholder="{{{result.name}}}"></input>
+        </div>
+
+        <div>
+        <label for="locationIP">Location</label>
+        <input type="text" name="locationIP" id="locationIP" placeholder="{{{result.location}}}"></input>
+        </div>
+
+        <div>
+        <label for="capacityIP">Capacity</label>
+        <input type="number" name="capacityIP" id="capacityIP" placeholder="{{{result.capacity}}}"></input>
+        </div>
+
+        <button class="btn" id="update">Update</button>
+    </form>
+
+    <div class="error">
+        <div id="errorlabel" class="errorLabel"></div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+    crossorigin="anonymous"></script>
+    <script src="/public/js/updateWarehouse.js"></script>
+</div>

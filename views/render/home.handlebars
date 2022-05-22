@@ -1,0 +1,95 @@
+<div>
+    <h1>Home</h1>
+    <div id="nav">
+        <button class= "btn" id="createInventory">Create Inventory Items</button>
+        <button class= "btn" id="viewInventory">View All Inventory Items</button>
+        <button class= "btn" id="createWarehouse">Create Warehouse</button>
+        <button class= "btn" id="viewWarehouse">View All Warehouses</button>
+        <button class= "btn" id="transferItems" onclick='window.location="/transfer"'>Transer Items</button>
+    </div>
+
+    <div id="addInventory">
+        <h2>
+            Add New Item
+        </h2>
+        <h2 id="success">
+            Item added successfully
+        </h2>
+        <form action="POST" id="itemForm">
+            <div>
+            <label for="titleIP">Title</label>
+            <input type="text" name="titleIP" id="titleIP"></input>
+            </div>
+
+            <div>
+            <label for="descIP">Description</label>
+            <textarea name="descIP" id="descIP" cols="40" rows="10"></textarea>
+            </div>
+
+            <div>
+            <label for="costIP">Cost</label>
+            <input type="number" step="0.01" min="0" name="costIP" id="costIP"></input>
+            </div>
+
+            <div>
+            <label for="stockIP">Stock</label>
+            <input type="number" min="1" name="stockIP" id="stockIP"></input>
+            </div>
+
+            <div>
+            <label for="weightIP">Weight</label>
+            <input type="number" step="0.01" min="0" name="weightIP" id="weightIP"></input>
+            </div>
+
+            <button class="btn" id="create">Create</button>
+        </form>
+
+        <div class="error">
+            <div id="errorlabel" class="errorLabel"></div>
+        </div>
+
+    </div>
+
+    <div id="viewAllInventory">
+
+    </div>
+
+    <div id="addWarehouse">
+        <h2>
+            Add New Warehouse
+        </h2>
+        <h2 id="successWarehouse">
+            Warehouse added successfully
+        </h2>
+        <form action="POST" id="warehouseForm">
+            <div>
+            <label for="nameIP">Name</label>
+            <input type="text" name="nameIP" id="nameIP"></input>
+            </div>
+
+            <div>
+            <label for="locationIP">Location</label>
+            <input type="text" name="locationIP" id="locationIP"></input>
+            </div>
+
+            <div>
+            <label for="capacityIP">Capacity</label>
+            <input type="number" min="1" name="capacityIP" id="capacityIP"></input>
+            </div>
+
+            <button class="btn" id="addWarehouseBtn">Create</button>
+        </form>
+
+        <div class="error">
+            <div class="errorLabel" id="warehouseError"></div>
+        </div>
+    </div>
+
+    <div id="viewAllWarehouse">
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+    crossorigin="anonymous"></script>
+    <script src="/public/js/home.js"></script>
+</div>

@@ -1,0 +1,31 @@
+<div>
+    <button class="btn" onclick='window.location="/"'>HOME</button>
+    <div class="from">
+        <label for="from">From</label>
+        <select name="from" id="from">
+            <option value="null">Select One</option>
+        </select>
+    </div>
+
+    <div class="to">
+        <label for="to">To</label>
+        <select name="to" id="to">
+
+        </select>
+    </div>
+
+    <div class="stock">
+        <label for="stock">Stock</label>
+        <input type="number" name="stock" id="stock"></input>
+    </div>
+
+    <button id="transfer" class="btn">Transfer</button>
+
+    <div class="error">
+            <div id="errorlabel" class="errorLabel"></div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+    crossorigin="anonymous"></script>
+    <script src="/public/js/transfer.js"></script>
+</div>

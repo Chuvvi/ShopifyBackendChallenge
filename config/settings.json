@@ -1,0 +1,6 @@
+{
+    "mongoConfig": {
+      "serverUrl": "mongodb+srv://shopify:shopify@shopify.iq6e8.mongodb.net/?retryWrites=true&w=majority",
+      "database": "ShopifyBackendChallenge"
+    }
+}
