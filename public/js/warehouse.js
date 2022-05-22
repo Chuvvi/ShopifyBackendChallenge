@@ -20,7 +20,7 @@
             }
             table += `</table>`;
         }
-        let edit = `<button class='btn edit' value='${data._id}' onclick='window.location="/editwarehouses/${data._id}"'>Edit</button>`;
+        let edit = `<button class='btn edit' value='${data._id}' onclick='window.location="/editwarehouse/${data._id}"'>Edit</button>`;
         let del = `<button class='btn del' value='${data._id}'>Delete</button>`;
         return `<div id=${data._id}>${name}${location}${capacity}${capacityFilled}${table}${edit}${del}</div>`;
     }
@@ -65,7 +65,7 @@
             }
         }
         $.ajax(retrieveReq).then(function(res){
-
+            // warehouseinfo.empty();
         })
     })
 })(window.jQuery);

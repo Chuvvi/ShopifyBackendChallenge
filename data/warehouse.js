@@ -74,7 +74,7 @@ async function addItem(warehouseID, itemID, stock){
     let res;
     stock = checkNum(stock, 'Item stock', 'int');
     if(item.stock < stock) throw `'${item.title}' stock is less than the demand`;
-    if(stock + w.capacityFilled > w.capacity) throw `Warehouse ${w.name} capacity exceeded`;
+    if(stock > w.capacity) throw `Warehouse ${w.name} capacity exceeded`;
     
     // update params
     item.stock -= stock;
@@ -99,7 +99,7 @@ async function addItem(warehouseID, itemID, stock){
             '$inc' : {
                 'locations.$.stock': stock
             }
-        })
+        });
 
         res = await warehouseCollection.updateOne({
             '_id': ObjectId(warehouseID),
@@ -113,35 +113,45 @@ async function addItem(warehouseID, itemID, stock){
             '$inc' : {
                 'stock.$.stock': stock
             }
-        })
+        });
     }
 
     // if warehouse does not exist
     else{
-        item.locations.push({
-            warehouseID: warehouseID,
-            warehouseName: w.name,
-            stock: stock
+        res = await inventoryCollection.updateOne({
+            '_id': ObjectId(itemID)
+        },
+        {
+            '$set' : {
+                'stock': item.stock,
+                'warehouseStock': item.warehouseStock,
+            },
+            '$push': {
+                'locations': {
+                    warehouseID: warehouseID,
+                    warehouseName: w.name,
+                    stock: stock
+                }
+            },
         });
-        const itemUpdate = {
-            stock: `${item.stock}`,
-            warehouseStock: item.warehouseStock,
-            locations: item.locations
-        }
-        res = await inventory.edit(itemUpdate, itemID)
 
-        // update warehouse
-        w.stock.push({
-            itemID: itemID,
-            itemName: item.title,
-            stock: stock
-        });
-        const warehouseUpdate = {
-            capacity: `${w.capacity}`,
-            capacityFilled: w.capacityFilled,
-            stock: w.stock
-        }
-        res = await edit(warehouseUpdate, warehouseID);
+        res = await warehouseCollection.updateOne({
+            "_id": ObjectId(warehouseID)
+        },
+        {
+            '$set': {
+                'capacity': w.capacity,
+                'capacityFilled': w.capacityFilled
+            },
+            '$push': {
+                'stock': {
+                    itemID: itemID,
+                    itemName: item.title,
+                    stock: stock
+                }
+            }
+        })
+
     }
     return `${stock} of item '${item.title}' added to warehouse '${w.name}'!`;
 }

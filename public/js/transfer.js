@@ -17,12 +17,10 @@
             }
             $.ajax(req2).then(function(war){
                 for(let i of items){
-                    $('#from').append(`<option value="${i._id}item">Item ${i.title}</option>`);
-                    // $('#to').append(`<option value="${i._id}">Item ${i.title}</option>`);
+                    $('#from').append(`<option value="${i._id}item${i.stock}" id="${i._id}">Item ${i.title}</option>`);
                 }
                 for(let i of war){
-                    $('#from').append(`<option value="${i._id}ware">Warehouse ${i.name}</option>`);
-                    // $('#to').append(`<option value="${i._id}">Warehouse ${i.name}</option>`);
+                    $('#from').append(`<option value="${i._id}ware${i.capacity}" id="${i._id}">Warehouse ${i.name}</option>`);
                 }
             })
         })
@@ -31,42 +29,72 @@
     getData();
 
     $('#from').on('change', function(){
+        $('#toStock').text('');
         if(this.value === "null"){
             to.empty();
+            to.append(`<option value="null">Select One</option>`);
+            $('#fromStock').text('');
         }
-        else if(this.value.substr(24) === "item"){
+        else if(this.value.slice(24, 28) === "item"){
             // add only warehouses
             to.empty();
+            to.append(`<option value="null">Select One</option>`);
+            $('#fromStock').text(`Stock left: ${this.value.slice(28)}`);
             var req = {
                 method: 'POST',
                 url: '/getallwarehouses'
-            }
+            };
             $.ajax(req).then(function(res){
-                for(let i of res) to.append(`<option value="${i._id}">Warehouse ${i.name}</option>`);
+                for(let i of res){
+                    if(i.capacity !== 0) to.append(`<option value="${i._id}ware${i.capacity}" id="${i._id}">Warehouse ${i.name}</option>`);
+                }
             })
         }
         else{
             // add only items
             to.empty();
+            to.append(`<option value="null">Select One</option>`);
+            $('#fromStock').text(`Capacity left: ${this.value.slice(28)}`);
+
             var req = {
-                method: 'POST',
-                url: '/getallitems'
-            }
+                method: 'GET',
+                url: `/warehouseinfo/${this.value.slice(0, 24)}`
+            };
             $.ajax(req).then(function(res){
-                for(let i of res) to.append(`<option value="${i._id}">Item ${i.title}</option>`);
+                for(let i of res.result.stock){
+                    var req = {
+                        method: 'GET',
+                        url: `/iteminfo/${i.itemID}`
+                    }
+                    $.ajax(req).then(function(res){
+                        to.append(`<option value="${i.itemID}item${i.stock}item${res.result.stock}" id="${i.itemID}">Item ${i.itemName}</option>`);
+                    })
+                }
             })
         }
     })
 
+    $('#to').on('change', function(){
+        if(this.value === "null") $('#toStock').text('');
+        let params = this.value.split('item');
+        if(this.value.slice(24, 28) === "item") $('#toStock').text(`Stock in warehouse: ${params[1]}, Stock left in inventory: ${params[2]}`);
+        else $('#toStock').text(`Capacity left: ${this.value.slice(28)}`);
+    })
+
 
     $('#transfer').on('click', function(){
-        var fromReq = from.val().substr(0, 24);
-        var toReq = to.val();
+        var fromReq = from.val().slice(0, 24);
+        var toReq = to.val().slice(0, 24);
         var stockReq = stock.val();
-        var decide = from.val().substr(24);
+        var decide = from.val().slice(24,28);
 
         if(fromReq === 'null') errorlabel.text("Please select a valid source");
+        else if(toReq === 'null') errorlabel.text("Please select a valid destination");
         else{
+            var fromOption = document.getElementById(`${fromReq}`);
+            var fromOptionParams = fromOption.value.split('item');
+            let fromParams = $('#fromStock').text().split(": ");
+            let toParams = $('#toStock').text().split(": ");
             if(decide === 'item'){
                 // use add item function
                 var req = {
@@ -79,6 +107,11 @@
                     }
                 }
                 $.ajax(req).then(function(res){
+                    let newFrom = parseInt(fromParams[1]) - parseInt(stockReq);
+                    let newTo = parseInt(toParams[1]) - parseInt(stockReq);
+                    $('#fromStock').text(`${fromParams[0]}: ${newFrom}`);
+                    $('#toStock').text(`${toParams[0]}: ${newTo}`);
+                    fromOption.value = `${fromOptionParams[0]}item${newFrom}`;
                     errorlabel.text(res);
                 }).fail(function(xhr, status, error){
                     errorlabel.text(xhr.responseJSON.error);
@@ -96,6 +129,14 @@
                     }
                 }
                 $.ajax(req).then(function(res){
+                    let midSplit = toParams[1].split(',');
+                    let newFrom = parseInt(fromParams[1]) + parseInt(stockReq);
+                    let newStockWare = parseInt(midSplit[0]) - parseInt(stockReq);
+                    let newStock = parseInt(toParams[2]) + parseInt(stockReq);
+                    let fop = fromOptionParams[0].split('ware');
+                    $('#fromStock').text(`${fromParams[0]}: ${newFrom}`);
+                    $('#toStock').text(`${toParams[0]}: ${newStockWare}, ${midSplit[1]}: ${newStock}`);
+                    fromOption.value = `${fop[0]}ware${newFrom}`;
                     errorlabel.text(res);
                 }).fail(function(xhr, status, error){
                     errorlabel.text(xhr.responseJSON.error);
