@@ -59,7 +59,6 @@ async function remove(id){
 async function getAll(){
     const inventoryCollection = await inventory();
     const res =  await inventoryCollection.find({}).toArray();
-    if(res.length === 0) throw `No items to display`
     return res;
 }
 

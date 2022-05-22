@@ -57,7 +57,6 @@ async function remove(id){
 async function getAll(){
     const warehouseCollection = await warehouse();
     const res =  await warehouseCollection.find({}).toArray();
-    if(res.length === 0) throw `No warehouses to display`
     return res;
 }
 
