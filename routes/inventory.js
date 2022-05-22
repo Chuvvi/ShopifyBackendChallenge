@@ -151,7 +151,8 @@ router.post('/retrieve', async(req, res) =>{
 
 router.get('/editwarehouse/:id', async(req, res) =>{
     try{
-        return res.status(200).render('render/editWarehouse', {});
+        const result = await warehouse.get(req.params.id);
+        return res.status(200).render('render/editWarehouse', {result});
     }
     catch (e){
         return res.status(400).render('render/warehouseNotFound', {});
