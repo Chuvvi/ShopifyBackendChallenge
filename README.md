@@ -13,4 +13,6 @@ The following are the dependencies that are needed for the program to run:
 * Express-Handlebars
 * MongoDB
 
-The dependencies can be installed using the command "npm install" or just "npm i"
+The dependencies can be installed by using the command "npm install" or just "npm i"
+
+The website can also be directly accessed at https://shopifybackendchallenge.chuvvi.repl.co/
